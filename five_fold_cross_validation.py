@@ -71,6 +71,9 @@ data = data.drop_duplicates(subset='data')
 print(f"去重后样本数: {len(data)}")
 
 print("\n正在预处理序列...")
+non_string = data['data'].apply(lambda x: not isinstance(x, str))
+if non_string.any():
+    data['data'] = data['data'].astype(str)
 data['processed_seq'] = data['data'].apply(process_sequence)
 data['encoded_seq'] = data['processed_seq'].apply(replace_sequence)
 print("训练数据预处理完成!")
@@ -86,8 +89,11 @@ print("负样本数:", sum(test_data["label"] == 0))
 print("总样本数:", len(test_data))
 
 print("\n正在预处理测试序列...")
-test_data['processed_seq'] = test_data['data'].apply(process_sequence)
-test_data['encoded_seq'] = test_data['processed_seq'].apply(replace_sequence)
+non_string = data['data'].apply(lambda x: not isinstance(x, str))
+if non_string.any():
+    data['data'] = data['data'].astype(str)
+data['processed_seq'] = data['data'].apply(process_sequence)
+data['encoded_seq'] = data['processed_seq'].apply(replace_sequence)
 print("测试数据预处理完成!")
 
 
